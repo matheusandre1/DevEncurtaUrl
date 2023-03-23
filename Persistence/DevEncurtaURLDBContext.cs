@@ -1,25 +1,29 @@
 ﻿using DevEncurtaUrl.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevEncurtaUrl.Persistence
 {
-    public class DevEncurtaURLDBContext
+    public class DevEncurtaURLDBContext : DbContext
     {
-        private int _currentIndex = 1;
-        public DevEncurtaURLDBContext()
+
+
+        public DevEncurtaURLDBContext(DbContextOptions<DevEncurtaURLDBContext> options)
+            : base(options)
         {
-            Links = new List<ShortenedCustomLink>();
+
         }
 
-        public List<ShortenedCustomLink> Links { get; set; }
+        public DbSet<ShortenedCustomLink> Links { get; set; }
 
-        public void AddLink(ShortenedCustomLink link) 
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            link.Id = _currentIndex;
-
-            _currentIndex++;
-
-            Links.Add(link);
+            builder.Entity<ShortenedCustomLink>(e =>
+            {
+                e.HasKey(l => l.Id);
+            });
         }
+
+       
     }
 
 }
